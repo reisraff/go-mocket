@@ -63,6 +63,7 @@ func (s *FakeStmt) ExecContext(ctx context.Context, args []driver.NamedValue) (d
 	}
 
 	fResp := Catcher.FindResponse(s.q, args)
+	Watcher.ProcessQuery(s.q, args)
 
 	// To emulate any exception during query which returns rows
 	if fResp.Exceptions != nil && fResp.Exceptions.HookExecBadConnection != nil && fResp.Exceptions.HookExecBadConnection() {
@@ -118,6 +119,7 @@ func (s *FakeStmt) QueryContext(ctx context.Context, args []driver.NamedValue) (
 	}
 
 	fResp := Catcher.FindResponse(s.q, args)
+	Watcher.ProcessQuery(s.q, args)
 
 	if fResp.Exceptions != nil && fResp.Exceptions.HookQueryBadConnection != nil && fResp.Exceptions.HookQueryBadConnection() {
 		return nil, driver.ErrBadConn
